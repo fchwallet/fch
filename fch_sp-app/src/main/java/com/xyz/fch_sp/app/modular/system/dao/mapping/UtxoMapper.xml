@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyz.fch_sp.app.modular.system.dao.UtxoMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.xyz.fch_sp.app.modular.system.model.Utxo">
+		<result column="address" property="address" jdbcType="VARCHAR"/>
+		<result column="txid" property="txid" jdbcType="VARCHAR"/>
+		<result column="vout" property="vout" jdbcType="INTEGER"/>
+		<result column="amount" property="amount" jdbcType="BIGINT"/>
+		<result column="coinbase" property="coinbase" jdbcType="INTEGER"/>
+		<result column="spent" property="spent" jdbcType="INTEGER"/>
+		<result column="height" property="height" jdbcType="BIGINT"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		address, txid, vout, amount, coinbase, spent, height
+	</sql>
+
+	<select id="findByAddress" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		`utxo`
+		<where>
+			<if test = "address != null">
+				and address in
+				<foreach collection="address" item="ad" index="index" open="(" close=")" separator=",">
+					#{ad}
+				</foreach>
+			</if>
+			<if test = "coinbase != null">
+				and coinbase = #{coinbase}
+			</if>
+			<if test = "spent != null">
+				and spent = #{spent}
+			</if>
+		</where>
+	</select>
+
+	<select id="getTotal" resultType="com.xyz.fch_sp.app.modular.api.vo.UtxoVo">
+		select
+			cast(sum(amount) AS decimal(15,7)) as amount, address
+		from
+		`utxo`
+		<where>
+			<if test = "address != null">
+				and address in
+				<foreach collection="address" item="ad" index="index" open="(" close=")" separator=",">
+					#{ad}
+				</foreach>
+			</if>
+			<if test = "spent != null">
+				and spent = #{spent}
+			</if>
+		</where>
+		group by address
+	</select>
+
+
+</mapper>

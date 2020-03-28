@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyz.fch_sp.app.modular.system.dao.TxMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.xyz.fch_sp.app.modular.system.model.Tx">
+		<result column="address" property="address" jdbcType="VARCHAR"/>
+		<result column="txid" property="txid" jdbcType="VARCHAR"/>
+		<result column="height" property="height" jdbcType="BIGINT"/>
+		<result column="data" property="data" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		address, txid, height, `data`, status
+	</sql>
+
+	<select id="finAll" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		`tx`
+	</select>
+
+	<select id="findTxid" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		`tx` where txid = #{txid}
+	</select>
+
+	<update id="updateTx" parameterType="com.xyz.fch_sp.app.modular.system.model.Tx">
+        UPDATE tx SET status = #{status} WHERE txid = #{txid}
+	</update>
+
+	<select id="findStatus" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		`tx` where status = #{status} order by height asc
+	</select>
+
+</mapper>

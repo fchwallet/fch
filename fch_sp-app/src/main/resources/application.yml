@@ -1,0 +1,255 @@
+server:
+  port: 8422
+
+guns:
+  swagger-open: true              #是否开启swagger (true/false)
+  kaptcha-open: false             #是否开启登录时验证码 (true/false)
+  #  file-upload-path: d:/tmp     #文件上传目录(不配置的话为java.io.tmpdir目录)
+  spring-session-open: true      #是否开启spring session,如果是多机环境需要开启(true/false)
+  session-invalidate-time: 1800     #session失效时间(只在单机环境下生效，多机环境在SpringSessionConfig类中配置) 单位：秒
+  session-validation-interval: 900  #多久检测一次失效的session(只在单机环境下生效) 单位：秒
+  scheduler-switch:
+    signature: true
+  sms:
+    accessKey: 123
+    secretKey: 123456
+    templates:
+      registCodeTemplate: SMS_128840016
+      updatePWTemplate: SMS_128840015
+  oss:
+    accessKeyId: 123
+    accessKeySecret: 123456
+    bucket: test
+    endpoint: http://oss-cn-hangzhou.aliyuncs.com
+    domain: http://test.xyz.com
+    imgDir: img
+  inf:
+    balance: http://21312:8555/getBalance
+    total: http://123123:8555/getTotal
+  ws:
+    ssClientId: HC_QNEiCSA
+beetl:
+  resource-auto-check: true       #热加载beetl模板，开发时候用
+
+spring:
+  profiles:
+    active: @spring.active@
+  mvc:
+    static-path-pattern: /static/**
+    view:
+      prefix: /WEB-INF/view
+  devtools:
+    restart:
+      enabled: false
+      additional-paths: src/main/java
+      exclude: static/**,WEB-INF/view/**
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+      location: /data/upload_tmp
+  # qq
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: asdas@qq.com
+    password: ergslkknutvpcaah
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.socketFactory.fallback: false
+
+sender-email:
+    ali:
+      host: smtpdm-ap-southeast-1.aliyun.com
+      port: 25
+      username: 12312
+      password: 123123
+
+mybatis-plus:
+  typeAliasesPackage: com.xyz.fch_sp.app.modular.system.model
+
+log:
+  path: guns-logs
+
+
+
+---
+
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://asd:3306/fch?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    username: asd
+    password: asd
+    filters: wall,mergeStat
+    db-name: fch_sp
+
+#kafka配置
+BOOTSTRAP_SERVERS_CONFIG: sad
+GROUP_ID_CONFIG: 4
+ENABLE_AUTO_COMMIT_CONFIG: true
+AUTO_COMMIT_INTERVAL_MS_CONFIG: 100
+SESSION_TIMEOUT_MS_CONFIG: 15000
+AUTO_STARTUP: false
+
+#多数据源情况的配置
+guns:
+  swagger-open: false              #是否开启swagger (true/false)
+  muti-datasource:
+    open: false
+    driverClassName: org.apache.phoenix.queryserver.client.Driver
+    url: jdbc:phoenix:thin:url=http://123123:8765;serialization=PROTOBUF
+    username:
+    password:
+    dataSourceNames:
+      - dataSourceGuns
+      - dataSourceBiz
+
+  scheduler-switch:
+    signature: true
+#  hbase:
+#    phoenix:
+#      datasource:
+#        driver-class-name: org.apache.phoenix.queryserver.client.Driver
+#        url: jdbc:phoenix:thin:url=http://10.0.0.130:8765;serialization=PROTOBUF
+#        type: com.alibaba.druid.pool.DruidDataSource
+#        username:
+#        password:
+#        default-auto-commit: true
+
+redis:
+  host: asd
+  port: 6379
+  password: dsfsd
+  database: 11
+  expiration: 300
+---
+
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://asd:3306/fch?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    username: asd
+    password: asd
+    filters: wall,mergeStat
+    db-name: fch_sp
+
+#多数据源情况的配置
+guns:
+  swagger-open: false              #是否开启swagger (true/false)
+  muti-datasource:
+    open: false
+    driverClassName: org.apache.phoenix.queryserver.client.Driver
+    url: jdbc:phoenix:thin:url=http://34234:8765;serialization=PROTOBUF
+    username:
+    password:
+    dataSourceNames:
+      - dataSourceGuns
+      - dataSourceBiz
+
+  scheduler-switch:
+      signature: false
+#  hbase:
+#    phoenix:
+#      datasource:
+#        driver-class-name: org.apache.phoenix.queryserver.client.Driver
+#        url: jdbc:phoenix:thin:url=http://10.0.0.130:8765;serialization=PROTOBUF
+#        type: com.alibaba.druid.pool.DruidDataSource
+#        username:
+#        password:
+#        default-auto-commit: true
+
+redis:
+  host: asd
+  port: 6379
+  password: asd
+  database: 12
+  expiration: 300
+---
+
+
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://asd:3306/fch?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    username: asd
+    password: dsad
+    filters: wall,mergeStat
+    db-name: fch_sp
+
+
+#kafka配置
+BOOTSTRAP_SERVERS_CONFIG: asd:9092
+GROUP_ID_CONFIG: 4
+ENABLE_AUTO_COMMIT_CONFIG: true
+AUTO_COMMIT_INTERVAL_MS_CONFIG: 100
+SESSION_TIMEOUT_MS_CONFIG: 15000
+AUTO_STARTUP: false
+
+#多数据源情况的配置
+guns:
+  swagger-open: false              #是否开启swagger (true/false)
+  muti-datasource:
+    open: false
+    driverClassName: org.apache.phoenix.queryserver.client.Driver
+    url: jdbc:phoenix:thin:url=http://32423423:8765;serialization=PROTOBUF
+    username:
+    password:
+    dataSourceNames:
+      - dataSourceGuns
+      - dataSourceBiz
+
+  scheduler-switch:
+    signature: true
+
+redis:
+  host: asd
+  port: 6379
+  password: asd
+  database: 12
+  expiration: 300
+
+---
+
+spring:
+  profiles: produce
+  datasource:
+    url: jdbc:mysql://asd:3306/fch?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    username: asd
+    password: asd
+    filters: wall,mergeStat
+redis:
+  host: asd
+  port: 6289
+  password: cxv
+  database: 0
+  expiration: 300
+guns:
+  swagger-open: false              #是否开启swagger (true/false)
+  kaptcha-open: false             #是否开启登录时验证码 (true/false)
+  muti-datasource:
+    open: false
+    driverClassName: org.apache.phoenix.queryserver.client.Driver
+    url: jdbc:phoenix:thin:url=http://324234:8765;serialization=PROTOBUF
+    username:
+    password:
+    dataSourceNames:
+      - dataSourceGuns
+      - dataSourceBiz
+  scheduler-switch:
+    signature: true
+
+#kafka配置
+BOOTSTRAP_SERVERS_CONFIG: asd:9092
+GROUP_ID_CONFIG: 4
+ENABLE_AUTO_COMMIT_CONFIG: true
+AUTO_COMMIT_INTERVAL_MS_CONFIG: 100
+SESSION_TIMEOUT_MS_CONFIG: 15000
+AUTO_STARTUP: false
+

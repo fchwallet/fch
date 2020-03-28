@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyz.fch_sp.app.modular.system.dao.ContractMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xyz.fch_sp.app.modular.system.model.Contract">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="send_date" property="sendDate" jdbcType="VARCHAR" />
+        <result column="end_date" property="endDate" jdbcType="VARCHAR" />
+        <result column="overdue_date" property="overdueDate" jdbcType="VARCHAR" />
+        <result column="complete_date" property="completeDate" jdbcType="VARCHAR" />
+        <result column="txid" property="txid" jdbcType="VARCHAR" />
+        <result column="sender" property="sender" jdbcType="VARCHAR" />
+        <result column="recipient" property="recipient" jdbcType="VARCHAR" />
+        <result column="mark" property="mark" jdbcType="VARCHAR" />
+        <result column="crypt" property="crypt" jdbcType="VARCHAR" />
+        <result column="sender_company" property="senderCompany" jdbcType="VARCHAR" />
+        <result column="recipient_company" property="recipientCompany" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, status, send_date, end_date, overdue_date, complete_date, txid, sender, recipient, mark, crypt,
+        sender_company, recipient_company
+    </sql>
+
+
+    <select id="pageList" parameterType="map" resultType="com.xyz.fch_sp.app.modular.system.model.Contract">
+      select * from contract
+      <where>
+        <if test = "sender != null and recipient == null">
+            and sender = #{sender}
+        </if>
+        <if test = "recipient != null and sender == null">
+            and recipient = #{recipient}
+        </if>
+        <if test = "title != null">
+            and title = #{title}
+        </if>
+        <if test = "status != null and status != -1">
+            and status = #{status}
+        </if>
+        <if test = "endDate != null">
+            and end_date = #{endDate}
+        </if>
+        <if test = "overdueDate != null">
+            and overdue_date = #{overdueDate}
+        </if>
+        <if test = "completeDate != null">
+            and complete_date = #{completeDate}
+        </if>
+        <if test = "senderCompany != null">
+            and sender_company = #{senderCompany}
+        </if>
+        <if test = "recipientCompany != null">
+            and recipient_company = #{recipientCompany}
+        </if>
+        <if test = "sender != null and recipient != null">
+            and (sender = #{sender} or recipient = #{recipient})
+        </if>
+      </where>
+      limit #{offset},#{limit}
+    </select>
+
+    <select id="pageCount" parameterType="map" resultType="long">
+      select count(0) from contract
+        <where>
+            <if test = "sender != null and recipient == null">
+                and sender = #{sender}
+            </if>
+            <if test = "recipient != null and sender == null">
+                and recipient = #{recipient}
+            </if>
+            <if test = "title != null">
+                and title = #{title}
+            </if>
+            <if test = "status != null and status != -1">
+                and status = #{status}
+            </if>
+            <if test = "endDate != null">
+                and end_date = #{endDate}
+            </if>
+            <if test = "overdueDate != null">
+                and overdue_date = #{overdueDate}
+            </if>
+            <if test = "completeDate != null">
+                and complete_date = #{completeDate}
+            </if>
+            <if test = "senderCompany != null">
+                and sender_company = #{senderCompany}
+            </if>
+            <if test = "recipientCompany != null">
+                and recipient_company = #{recipientCompany}
+            </if>
+            <if test = "sender != null and recipient != null">
+                and (sender = #{sender} or recipient = #{recipient})
+            </if>
+        </where>
+    </select>
+
+    <update id="updateContract" parameterType="com.xyz.fch_sp.app.modular.system.model.Contract">
+        UPDATE contract SET status = #{status} WHERE id = #{id}
+    </update>
+
+
+    <insert id="insertContractInfo" parameterType="com.xyz.fch_sp.app.modular.system.model.Contract">
+        insert into contract
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="title != null" >
+                title,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="sendDate != null" >
+                send_date,
+            </if>
+            <if test="endDate != null" >
+                end_date,
+            </if>
+            <if test="overdueDate != null" >
+                overdue_date,
+            </if>
+            <if test="completeDate != null" >
+                complete_date,
+            </if>
+            <if test="txid != null" >
+                txid,
+            </if>
+            <if test="sender != null" >
+                sender,
+            </if>
+            <if test="recipient != null" >
+                recipient,
+            </if>
+            <if test="mark != null" >
+                mark,
+            </if>
+            <if test="crypt != null" >
+                crypt,
+            </if>
+            <if test="senderCompany != null" >
+                sender_company,
+            </if>
+            <if test="recipientCompany != null" >
+                recipient_company,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null" >
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="sendDate != null" >
+                #{sendDate,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=VARCHAR},
+            </if>
+            <if test="overdueDate != null" >
+                #{overdueDate,jdbcType=VARCHAR},
+            </if>
+            <if test="completeDate != null" >
+                #{completeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="txid != null" >
+                #{txid,jdbcType=VARCHAR},
+            </if>
+            <if test="sender != null" >
+                #{sender,jdbcType=VARCHAR},
+            </if>
+            <if test="recipient != null" >
+                #{recipient,jdbcType=VARCHAR},
+            </if>
+            <if test="mark != null" >
+                #{mark,jdbcType=VARCHAR},
+            </if>
+            <if test="crypt != null" >
+                #{crypt,jdbcType=INTEGER},
+            </if>
+            <if test="senderCompany != null" >
+                #{senderCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="recipientCompany != null" >
+                #{recipientCompany,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="findTxLink" resultMap="BaseResultMap">
+        SELECT
+            id
+        FROM
+        `contract` where link_txid = #{txid}
+    </select>
+
+    <select id="findTxid" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+        `contract` where txid = #{txid}
+    </select>
+
+    <select id="findContractList" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+        `contract` where status = 0
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+        `contract` where id = #{id}
+    </select>
+
+</mapper>

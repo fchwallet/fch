@@ -1,0 +1,20 @@
+package com.xyz.fch_sp.app.modular.system.service;
+
+import com.xyz.fch_sp.app.modular.system.model.RankingAsset;
+import com.baomidou.mybatisplus.service.IService;
+
+/**
+ * <p>
+ *  服务类
+ * </p>
+ *
+ * @author stylefeng
+ * @since 2019-04-10
+ */
+public interface IRankingAssetService extends IService<RankingAsset> {
+
+    int selectRankByAddress(String address);
+
+    String selectCirculation();
+
+}

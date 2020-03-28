@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyz.fch_sp.app.modular.system.dao.DataMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.xyz.fch_sp.app.modular.system.model.Data">
+		<result column="agreement_type" property="agreementType" jdbcType="VARCHAR"/>
+		<result column="agreement_number" property="agreementNumber" jdbcType="INTEGER"/>
+		<result column="version_number" property="versionNumber" jdbcType="INTEGER"/>
+		<result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+		<result column="relationship" property="relationship" jdbcType="VARCHAR"/>
+		<result column="start_time" property="startTime" jdbcType="BIGINT"/>
+		<result column="end_time" property="endTime" jdbcType="BIGINT"/>
+		<result column="extent" property="extent" jdbcType="INTEGER"/>
+		<result column="cid" property="cid" jdbcType="VARCHAR"/>
+		<result column="address" property="address" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		agreement_type, agreement_number, version_number, nickname, relationship, start_time, end_time, extent, cid, address
+	</sql>
+
+	<insert id="insertData" parameterType="com.xyz.fch_sp.app.modular.system.model.Data">
+		insert into `data`
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="agreementType != null" >
+				agreement_type,
+			</if>
+			<if test="agreementNumber != null" >
+				agreement_number,
+			</if>
+			<if test="versionNumber != null" >
+				version_number,
+			</if>
+			<if test="nickname != null" >
+				nickname,
+			</if>
+			<if test="relationship != null" >
+				relationship,
+			</if>
+			<if test="startTime != null" >
+				start_time,
+			</if>
+			<if test="endTime != null" >
+				end_time,
+			</if>
+			<if test="extent != null" >
+				extent,
+			</if>
+			<if test="cid != null" >
+				cid,
+			</if>
+			<if test="address != null" >
+				address,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="agreementType != null" >
+				#{agreementType,jdbcType=VARCHAR},
+			</if>
+			<if test="agreementNumber != null" >
+				#{agreementNumber,jdbcType=INTEGER},
+			</if>
+			<if test="versionNumber != null" >
+				#{versionNumber,jdbcType=INTEGER},
+			</if>
+			<if test="nickname != null" >
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="relationship != null" >
+				#{relationship,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null" >
+				#{startTime,jdbcType=BIGINT},
+			</if>
+			<if test="endTime != null" >
+				#{endTime,jdbcType=BIGINT},
+			</if>
+			<if test="extent != null" >
+				#{extent,jdbcType=VARCHAR},
+			</if>
+			<if test="cid != null" >
+				#{cid,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null" >
+				#{address,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="getCid" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+        `data`
+        <where>
+        	<if test = "cid != null">
+				and cid like CONCAT('%','${cid}','%' )
+			</if>
+		</where>
+		limit #{offset},#{limit}
+    </select>
+
+	<select id="getCidCount" resultType="long">
+        SELECT
+            count(0)
+        FROM  `data`
+		<where>
+			<if test = "cid != null">
+				and cid like CONCAT('%','${cid}','%' )
+			</if>
+		</where>
+    </select>
+
+
+	<select id="findByCidCount" resultType="long">
+        SELECT
+            count(0)
+        FROM
+        `data` where address = #{address}
+    </select>
+
+	<select id="findAddress" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+        `data` where address = #{address}
+    </select>
+
+	<update id="updataData" parameterType="com.xyz.fch_sp.app.modular.system.model.Data">
+        UPDATE  `data`
+		<trim prefix="set" suffixOverrides=",">
+			<if test="cid != null"> cid = #{cid}, </if>
+			<if test="nickname != null"> nickname = #{nickname}, </if>
+			<if test="extent != null"> extent = #{extent}, </if>
+		</trim>
+		WHERE address = #{address}
+    </update>
+
+	<delete id="deleteAddress">
+		  delete from `data` where address = #{address}
+	</delete>
+
+
+	<select id="findtest" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM  `data`
+	</select>
+
+	<select id="findByAddress" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		`data`
+		<where>
+			<if test = "address != null">
+				and address in
+				<foreach collection="address" item="ad" index="index" open="(" close=")" separator=",">
+					#{ad}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+</mapper>

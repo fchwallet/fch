@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyz.fch_sp.app.modular.system.dao.HistoryMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.xyz.fch_sp.app.modular.system.model.History">
+		<result column="txid" property="txid" jdbcType="VARCHAR"/>
+		<result column="height" property="height" jdbcType="BIGINT"/>
+		<result column="idx" property="idx" jdbcType="INTEGER"/>
+		<result column="tx_size" property="txSize" jdbcType="INTEGER"/>
+		<result column="time" property="time" jdbcType="BIGINT"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		txid, height, idx, tx_size, `time`
+	</sql>
+
+	<select id="findByAddress" resultType="com.xyz.fch_sp.app.modular.api.vo.HistoryVo">
+		SELECT h.txid, h.time, height, newdata.value, newdata.status FROM history h INNER JOIN
+			(SELECT *,0 as status FROM
+			(SELECT txid, value FROM vouts WHERE address = #{address}) b
+		UNION  ALL
+			SELECT *,1 as status FROM
+			(SELECT a.txid, vut.value FROM vouts vut INNER JOIN (SELECT `hash`,vout, txid FROM vins WHERE hash
+			in(SELECT txid FROM vouts WHERE address = #{address})) a ON vut.txid = a.hash AND vut.n = a.vout
+			AND address = #{address} ) a) newdata ON h.txid = newdata.txid ORDER BY height desc
+			limit #{offset},#{limit}
+	</select>
+
+	<select id="findCount" resultType="long">
+		SELECT count(0) FROM history h INNER JOIN
+			(SELECT *,0 as status FROM
+			(SELECT txid, value FROM vouts WHERE address = #{address}) b
+		UNION  ALL
+			SELECT *,1 as status FROM
+			(SELECT a.txid, vut.value FROM vouts vut INNER JOIN (SELECT `hash`,vout, txid FROM vins WHERE hash
+			in(SELECT txid FROM vouts WHERE address = #{address})) a ON vut.txid = a.hash AND vut.n = a.vout
+			AND address = #{address} ) a) newdata ON h.txid = newdata.txid ORDER BY height desc
+	</select>
+
+
+</mapper>
